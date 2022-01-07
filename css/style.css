@@ -4,3 +4,10 @@
 .card img{
 height: 500px;
 }
+
+.img2{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
