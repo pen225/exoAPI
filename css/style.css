@@ -11,3 +11,8 @@ height: 500px;
     top: 50%;
     transform: translate(-50%, -50%);
 }
+
+nav .Page{
+    text-align: center;
+    color: red;
+}

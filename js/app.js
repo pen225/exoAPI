@@ -1,10 +1,9 @@
 let affiche = document.getElementById('affiche');
 let form = document.querySelector('form');
-let apiKey = '7843f8d22a43911f15301ef8d76338ae';
+let apiKey = '5c11dce65ccad3ca5428202e0c9b89f0';
 
 
 {/* <div>${dataElement[i].title}</div> <h5>${dataElement[i].title} </h5>   poster_path */}
-
 
 function page1(){
     console.log("cool");
@@ -85,19 +84,12 @@ let diminue ;
 }
     
 
-
-
-
-
-
 fetch(`
 https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=fr-FR&sort_by=popularity.desc&include_adult=false&include_video=false`)
 .then((res) => res.json())
 .then((data) =>  {
     getFilm(data)
-    
-    let resultData = data.results;
-    // console.log(resultData);
+    console.log(data);
 });
 
 
@@ -117,7 +109,6 @@ form.addEventListener("keyup", (e) =>{
 
     }
 })
-
 
 
 // Recherche au submit
@@ -147,14 +138,14 @@ const getFilm = (data) =>{
             for (let i = 0; i < dataElement.length; i++) {
                 // console.log(dataElement[i].title);
                 affiche.innerHTML += `
-        <div class="card-group col-4 img">
-            <div id ="card" class="card" onclick ="selection(${dataElement[i].id})">
-                    <img  class="card-img-top" src="https://image.tmdb.org/t/p/w500${dataElement[i].poster_path}" alt="Card image cap">
-                <div class="card-body">
-                <h5 class="card-title">${dataElement[i].title}</h5>
+                <div class="card-group col-4 img">
+                    <div id ="card" class="card" onclick ="selection(${dataElement[i].id})">
+                            <img  class="card-img-top" src="https://image.tmdb.org/t/p/w500${dataElement[i].poster_path}" alt="Card image cap">
+                        <div class="card-body">
+                        <h5 class="card-title">${dataElement[i].title}</h5>
+                        </div>
+                    </div>
                 </div>
-             </div>
-        </div>
     
                 `;     
             }
@@ -163,6 +154,61 @@ const getFilm = (data) =>{
  }
 
 
+ // Fonction de scroll infini
+function loadPages(){
+    let nextPage = 1;
+    
+    window.addEventListener('scroll', (e) =>{
+        console.log("nextPage",nextPage);
+        console.log(scrollY);
+        
+        const { scrollTop, scrollHeight, clientHeight} = document.documentElement;
+
+        let defile = scrollHeight - clientHeight;
+        console.log("scrollTop", scrollTop);
+        console.log("scrollHeight", scrollHeight);
+        console.log("clientHeight", clientHeight);
+        console.log("defile", defile    );
+
+        if (scrollY == defile) {
+            nextPage++;
+            fetch(`
+        https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${nextPage}`)
+        .then((res) => res.json())
+        .then((data) =>  {
+       
+        let dataElement = data.results;
+
+            for (let i = 0; i < dataElement.length; i++) {
+                // console.log(dataElement[i].title);
+                affiche.innerHTML += `
+                <div class="card-group col-4 img">
+                    <div id ="card" class="card" onclick ="selection(${dataElement[i].id})">
+                            <img  class="card-img-top" src="https://image.tmdb.org/t/p/w500${dataElement[i].poster_path}" alt="Card image cap">
+                        <div class="card-body">
+                        <h5 class="card-title">${dataElement[i].title}</h5>
+                        </div>
+                    </div>
+                </div>
+
+                `;     
+            }
+        });
+        }
+        
+    })
+    
+}
+
+
+// loadPages();
+let timeOut;
+function attente (){
+    timeOut = window.setTimeout(loadPages, 1000)
+}
+attente();
+
+ // Selection des elements individuels
  function selection(id){
      console.log(id);
     fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`)
@@ -184,24 +230,6 @@ const getFilm = (data) =>{
                         `;     
         
     })
-
-    
-    
-    
-
-     
-    //  let dataElement = data.results;
-    //  console.log(dataElement);
-    // //  Fonction selection
-    // fetch(`https://api.themoviedb.org/3/movie/157336?api_key=${apiKey}`)
-    // .then((res) => res.json())
-    // .then((data) =>  {
-    //     for (let i = 0; i < dataElement.length; i++) {
-    //         console.log(dataElement[i].id);
-    //         let idElement = dataElement[i].id;
-            
-    //     }
-    // })
     
  }
  
